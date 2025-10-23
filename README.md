@@ -1,0 +1,3 @@
+Platform: MacOS
+
+Honestly, TicTacToe was commented so thoroughly with instructions for what to do that I didn't really have much of a design process. I just kind of followed the instructions. I will say, however, that the most difficult part of this assignment for me was just learning how the codebase worked, and using that to inform my own code. This is pretty much my first time working with a pre-written codebase this big.
