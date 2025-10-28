@@ -60,6 +60,8 @@ void TicTacToe::setUpBoard() //DONE (I think)
     // finally we should call startGame to get everything going
 
     setNumberOfPlayers(2);
+    getPlayerAt(AI_PLAYER)->setAIPlayer(true);
+
     _gameOptions.rowX = 3;
     _gameOptions.rowY = 3;
 
@@ -313,11 +315,45 @@ void TicTacToe::setStateString(const std::string &s) //Done (I think)
 }
 
 
+
+
 //
 // this is the function that will be called by the AI
 //
-void TicTacToe::updateAI() 
-{
-    // we will implement the AI in the next assignment!
+void TicTacToe::updateAI() {
+    
 }
 
+void TicTacToe::negamax() {
+
+}
+
+int TicTacToe::evaluate(const std::string &s) {
+    int winConds[8][3] = {
+        {0,1,2},
+        {3,4,5},
+        {6,7,8},
+        {0,3,6},
+        {1,4,7},
+        {2,5,8},
+        {0,4,8},
+        {2,4,6}
+    };
+
+    for (auto &w : winConds) {
+        char a = s[w[0]];
+        char b = s[w[1]];
+        char c = s[w[2]];
+        if(a !=0 && a == b && a == c) {
+            if (a == '2') {
+                return +10;
+            }
+            else {
+                return -10;
+            }
+        }
+
+    }
+
+    return 0;
+}

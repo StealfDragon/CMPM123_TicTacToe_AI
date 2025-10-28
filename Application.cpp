@@ -33,7 +33,7 @@ namespace ClassGame {
                 if (!game) return;
                 if (!game->getCurrentPlayer()) return;
                 
-                ImGui::Begin("Settings");
+                ImGui::Begin("Info");
                 ImGui::Text("Current Player Number: %d", game->getCurrentPlayer()->playerNumber());
                 ImGui::Text("Current Board State: %s", game->stateString().c_str());
 
@@ -50,7 +50,15 @@ namespace ClassGame {
                 ImGui::End();
 
                 ImGui::Begin("GameWindow");
-                game->drawFrame();
+                if (ImGui::Button("Singleplayer")) {
+                    
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Multiplayer")) {
+                    //game gameHasAI = false;
+                }
+                ImGui::Separator();
+                //game->drawFrame();
                 ImGui::End();
         }
 
@@ -66,7 +74,7 @@ namespace ClassGame {
                 gameOver = true;
                 gameWinner = winner->playerNumber();
             }
-            else if (game->checkForDraw()) { //changed this to an else if because in my opinion draw should only be called if !winner
+            else if (game->checkForDraw()) { //changed this to an else if because draw should only be called if !winner
                 gameOver = true;
                 gameWinner = -1;
             }

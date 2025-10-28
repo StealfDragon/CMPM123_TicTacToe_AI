@@ -28,6 +28,9 @@ public:
     bool        canBitMoveFromTo(Bit* bit, BitHolder*src, BitHolder*dst) override;
     void        stopGame() override;
 
+    void        negamax();
+    int         evaluate(const std::string &s);
+
 	void        updateAI() override;
     bool        gameHasAI() override { return true; }
     BitHolder &getHolderAt(const int x, const int y) override { return _grid[y][x]; }
