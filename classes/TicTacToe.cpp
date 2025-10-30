@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 
 const int AI_PLAYER   = 1;      // index of the AI player (O)
-const int HUMAN_PLAYER= 0;      // index of the human player (X)
+const int HUMAN_PLAYER = -1;      // index of the human player (X)
 
 TicTacToe::TicTacToe()
 {
@@ -70,6 +70,10 @@ void TicTacToe::setUpBoard() //DONE (I think)
             ImVec2 position(10 + j * 100, 25 + i * 100);
             _grid[i][j].initHolder(position, "square.png", j, i);
         }
+    }
+
+    if(gameHasAI()) {
+        setAIPlayer(AI_PLAYER);
     }
 
     startGame();
@@ -159,7 +163,7 @@ Player* TicTacToe::ownerAt(int index ) const //DONE (I think)
     return nullptr;
 }
 
-Player* TicTacToe::checkForWinner() //GO BACK AND FIX
+Player* TicTacToe::checkForWinner()
 {
     // check all the winning triples
     // if any of them have the same owner return that player
@@ -321,11 +325,82 @@ void TicTacToe::setStateString(const std::string &s) //Done (I think)
 // this is the function that will be called by the AI
 //
 void TicTacToe::updateAI() {
+    int bestMove = -1000;
+    int bestSquare = -1;
     
+    std::string state = stateString();
+    for(int i = 0; i < 9; i++) {
+        if (state[i] == '0') {
+            state[i] = '2';
+            int nMax = -negamax(state, 0, HUMAN_PLAYER);
+            if (nMax > bestMove) {
+                bestMove = nMax;
+                bestSquare = i;
+            }
+            state[i] = '0';
+        }
+    }
+
+    if(bestSquare != -1) {
+        int xcol = bestSquare % 3;
+        int ycol = bestSquare / 3;
+        BitHolder *holder = &_grid[ycol][xcol];
+        actionForEmptyHolder(holder);
+        endTurn();
+    }
 }
 
-void TicTacToe::negamax() {
+bool aiBoardFull(const std::string& state) {
+    return state.find('0') == std::string::npos;
+}
 
+int aiWinner(const std::string& state) {
+    int tttCoords[8][3] = {
+        {0,1,2},
+        {3,4,5},
+        {6,7,8},
+        {0,3,6},
+        {1,4,7},
+        {2,5,8},
+        {0,4,8},
+        {2,4,6}
+    };
+
+    for (int row = 0; row < 8; row++) {
+        char a = state[tttCoords[row][0]];
+        char b = state[tttCoords[row][1]];
+        char c = state[tttCoords[row][2]];
+        if(a != '0' && a == b && a == c) {
+            return 10;
+        }
+
+    }
+
+    return 0;
+}
+
+int TicTacToe::negamax(std::string &state, int depth, int playerColor) {
+    int bestVal = -1000;
+    int boardWinner = aiWinner(state);
+    if(boardWinner) {
+        return -boardWinner;
+    }
+    bool boardFull = aiBoardFull(state);
+    if(boardFull) {
+        return 0;
+    }
+
+    for(int i = 0; i < 9; i++) {
+        if(state[i] == '0') {
+            state[i] = playerColor == HUMAN_PLAYER ? '1' : '2';
+            int result = -negamax(state, depth + 1, -playerColor);
+            if(result > bestVal) {
+                bestVal = result;
+            }
+            state[i] = '0';
+        }
+    }
+    return bestVal;
 }
 
 int TicTacToe::evaluate(const std::string &s) {
@@ -344,7 +419,7 @@ int TicTacToe::evaluate(const std::string &s) {
         char a = s[w[0]];
         char b = s[w[1]];
         char c = s[w[2]];
-        if(a !=0 && a == b && a == c) {
+        if(a != '0' && a == b && a == c) {
             if (a == '2') {
                 return +10;
             }

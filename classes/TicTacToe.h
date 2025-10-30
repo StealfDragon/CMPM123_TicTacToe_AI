@@ -28,7 +28,7 @@ public:
     bool        canBitMoveFromTo(Bit* bit, BitHolder*src, BitHolder*dst) override;
     void        stopGame() override;
 
-    void        negamax();
+    int         negamax(std::string &state, int depth, int playerColor);
     int         evaluate(const std::string &s);
 
 	void        updateAI() override;

@@ -50,15 +50,16 @@ namespace ClassGame {
                 ImGui::End();
 
                 ImGui::Begin("GameWindow");
+                /*
                 if (ImGui::Button("Singleplayer")) {
                     
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Multiplayer")) {
                     //game gameHasAI = false;
-                }
-                ImGui::Separator();
-                //game->drawFrame();
+                } */
+                //ImGui::Separator();
+                game->drawFrame();
                 ImGui::End();
         }
 
